@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dataset & Model Files (LARGE FILES - UNCOMMENT IF YOU DON'T WANT TO COMMIT THEM)
+# sign-language-detector-python/data/
+# built-in/dataset/model.p
+# built-in/dataset/data.pickle
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+fix.txt
+problem.txt
+
+# MQTT Config (if contains sensitive data)
+# config.json
