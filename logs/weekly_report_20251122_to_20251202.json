@@ -1,0 +1,37 @@
+{
+  "report_type": "weekly",
+  "period": {
+    "start_date": "20251122",
+    "end_date": "20251202"
+  },
+  "daily_sessions": [
+    {
+      "date": "20251122",
+      "letters": 16,
+      "words": 0,
+      "hands_detected": 659
+    },
+    {
+      "date": "20251124",
+      "letters": 271,
+      "words": 3,
+      "hands_detected": 12030
+    },
+    {
+      "date": "20251130",
+      "letters": 15,
+      "words": 3,
+      "hands_detected": 711
+    }
+  ],
+  "averages": {
+    "avg_letters_per_day": 100.67,
+    "avg_words_per_day": 2.0,
+    "avg_hands_detected_per_day": 4466.67,
+    "total_letters": 302,
+    "total_words": 6,
+    "total_hands_detected": 13400
+  },
+  "generated_at": "2025-12-02T13:22:00.076458",
+  "days_analyzed": 3
+}

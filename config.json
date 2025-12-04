@@ -1,0 +1,43 @@
+{
+  "mqtt": {
+    "broker": "broker.hivemq.com",
+    "port": 1883,
+    "topic_gesture": "pameran/gerakan",
+    "topic_visual": "pameran/visual",
+    "client_id": "kelompok-4-desktop",
+    "reconnect_interval": 3
+  },
+  "camera": {
+    "device_id": 0,
+    "width": 1280,
+    "height": 720,
+    "fps_limit": 45
+  },
+  "detection": {
+    "min_detection_confidence": 0.5,
+    "min_tracking_confidence": 0.5,
+    "max_num_hands": 1,
+    "cooldown_seconds": 2.5,
+    "min_stable_frames": 3
+  },
+  "model": {
+    "path": "built-in/dataset/model.p",
+    "data_path": "sign-language-detector-python/data"
+  },
+  "logging": {
+    "enabled": true,
+    "log_dir": "logs",
+    "save_sessions": true,
+    "csv_output": true
+  },
+  "ui": {
+    "show_roi_guide": true,
+    "show_landmarks": true,
+    "dark_mode": true
+  },
+  "autocorrect": {
+    "enabled": true,
+    "dictionary_path": "built-in/dictionary.txt",
+    "max_suggestions": 3
+  }
+}

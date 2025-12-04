@@ -1,0 +1,12 @@
+{
+  "session_id": "session_20251122",
+  "date": "20251122",
+  "start_time": "2025-11-22T14:02:40.992315",
+  "statistics": {
+    "total_frames": 841,
+    "hands_detected": 659,
+    "letters_recognized": 16,
+    "words_formed": 0
+  },
+  "last_update": "2025-11-22T14:03:18.527374"
+}
