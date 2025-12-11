@@ -1,0 +1,138 @@
+BUILD CHECKLIST - Production .exe Verification
+==============================================
+
+BEFORE BUILD:
+✓ Development mode tested and working
+✓ path_config.py detects frozen vs script mode
+✓ collect_data auto-creates dataset on close
+✓ train_model simplified (no create dataset button)
+✓ launcher auto-refresh every 2 seconds
+✓ All apps use path_config.py consistently
+
+CRITICAL DIFFERENCES - Dev vs Production:
+------------------------------------------
+| Feature              | Development (.py)           | Production (.exe)           |
+|---------------------|-----------------------------|-----------------------------|
+| PROJECT_ROOT        | G:\...\BahasaIsyarat        | dist/                       |
+| sys.frozen          | False                       | True                        |
+| path resolution     | __file__                    | sys.executable              |
+| built-in detection  | Not applicable              | Detects if in built-in/     |
+| File structure      | .py files in workspace      | .exe in dist/built-in/      |
+
+FILES MODIFIED (need to work in .exe):
+--------------------------------------
+1. path_config.py
+   - Detects getattr(sys, 'frozen', False)
+   - Uses __file__ for .py, sys.executable for .exe
+   - Handles built-in subfolder detection
+
+2. collect_data.py
+   - stdout/stderr restore during exec()
+   - Log window for dataset creation
+   - Uses path_config for BASE_DIR
+
+3. train_model.py
+   - Simplified UI (removed create dataset button)
+   - Uses path_config for PROJECT_ROOT
+
+4. launcher.py
+   - Auto-refresh every 2 seconds
+   - No changes needed for .exe mode
+
+5. build specs
+   - sklearn._forest and sklearn.tree._tree added
+   - Matplotlib and scipy NOT excluded
+   - cv2, mediapipe in train_model spec
+   - path_config.py bundled in all specs
+
+EXPECTED .exe BEHAVIOR:
+-----------------------
+dist/
+├── SignLanguageReader.exe          → PROJECT_ROOT = dist/
+├── path_config.py
+├── built-in/
+│   ├── collect_data.exe            → PROJECT_ROOT = dist/ (goes up 1 level)
+│   ├── desktop_app.exe             → PROJECT_ROOT = dist/ (goes up 1 level)
+│   ├── train_model.exe             → PROJECT_ROOT = dist/ (goes up 1 level)
+│   ├── create_dataset.py
+│   └── dataset/
+│       ├── data.pickle             → Created by collect_data close
+│       └── model.p                 → Created by train_model
+└── sign-language-detector-python/
+    └── data/
+        ├── static/
+        │   ├── alphabet/           → A/, B/, C/
+        │   └── numbers/            → 0/, 1/, 2/
+        └── dynamic/
+            └── words/              → aku/, saya/
+
+BUILD COMMAND:
+--------------
+.\build_all.bat
+
+TESTING SEQUENCE (MUST FOLLOW):
+--------------------------------
+1. Close all running .exe instances
+2. Run: .\build_all.bat
+3. Wait for build to complete (~2 minutes)
+4. Navigate to dist folder
+5. Run: SignLanguageReader.exe
+
+TEST WORKFLOW:
+--------------
+□ Launcher opens with both status "Not Found"
+□ Click "COLLECT DATA"
+   □ collect_data.exe opens
+   □ Console shows: [PATH] Running as: EXE
+   □ Console shows: PROJECT_ROOT = [path to dist]
+   □ Collect some images (e.g., A, B, C with 10 samples each)
+   □ Close window → Prompt "Create dataset?"
+   □ Click Yes → Log window shows processing
+   □ Dataset created successfully
+   
+□ Launcher auto-refreshes (wait 2 seconds)
+   □ Dataset status changes to "Ready"
+   □ "TRAIN MODEL" button becomes enabled
+
+□ Click "TRAIN MODEL"
+   □ train_model.exe opens
+   □ Console shows: [PATH] Running as: EXE
+   □ Console shows: PROJECT_ROOT = [path to dist]
+   □ Only "TRAIN MODEL" button visible (no create dataset)
+   □ Click "TRAIN MODEL"
+   □ Training completes successfully
+   □ Model saved
+
+□ Launcher auto-refreshes (wait 2 seconds)
+   □ Model status changes to "Ready"
+   □ "LAUNCH DESKTOP APP" button becomes green
+
+□ Click "LAUNCH DESKTOP APP"
+   □ desktop_app.exe opens
+   □ Show gesture → Detection works
+   □ Correct labels displayed
+
+POTENTIAL ISSUES TO WATCH:
+---------------------------
+1. Path errors → Check console for PROJECT_ROOT path
+2. sklearn import errors → Check if sklearn._forest bundled
+3. Dataset not found → Check if data saved to dist/built-in/dataset/
+4. Model not loading → Check if model at dist/built-in/dataset/model.p
+5. Slow startup → Normal for --onefile (10-15 seconds)
+
+IF ISSUES FOUND:
+----------------
+1. Note exact error message
+2. Check console output for [PATH] messages
+3. Verify file locations in dist folder
+4. Return to development mode to fix
+5. Re-test with run_dev.bat
+6. Re-build after fixes
+
+READY TO BUILD: YES/NO?
+-----------------------
+All checklist items reviewed: _____
+Development mode working: YES ✓
+Confident in production build: _____
+
+Next step: Run .\build_all.bat

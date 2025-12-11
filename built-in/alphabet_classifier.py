@@ -38,19 +38,27 @@ import pickle
 import time
 from sklearn.ensemble import RandomForestClassifier
 
+# Import path configuration for proper .exe support
+try:
+    from path_config import PROJECT_ROOT, MODEL_FILE, DATA_ROOT
+except ImportError:
+    # Fallback if path_config not available
+    PROJECT_ROOT = Path(__file__).parent.parent
+    MODEL_FILE = PROJECT_ROOT / "built-in" / "dataset" / "model.p"
+    DATA_ROOT = PROJECT_ROOT / "sign-language-detector-python" / "data"
+
 class AlphabetClassifier:
-    def __init__(self, model_path="built-in/dataset/model.p", data_path="sign-language-detector-python/data"):
+    def __init__(self, model_path=None, data_path=None):
         """
         Initialize alphabet classifier with pre-trained model or prepare for training
         
         Args:
-            model_path: Path to trained model pickle file (relative to project root)
-            data_path: Path to training data images (relative to project root)
+            model_path: Path to trained model pickle file (uses path_config if None)
+            data_path: Path to training data images (uses path_config if None)
         """
-        # Get project root (parent of built-in folder)
-        project_root = Path(__file__).parent.parent
-        self.model_path = project_root / model_path
-        self.data_path = project_root / data_path
+        # Use path_config paths for .exe compatibility
+        self.model_path = Path(MODEL_FILE) if model_path is None else Path(model_path)
+        self.data_path = Path(DATA_ROOT) if data_path is None else Path(data_path)
         
         print(f"[INFO] AlphabetClassifier model path: {self.model_path}")
         print(f"[INFO] Data path: {self.data_path}")

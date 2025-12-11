@@ -42,3 +42,10 @@ problem.txt
 
 # MQTT Config (if contains sensitive data)
 # config.json
+
+# Build artifacts (PyInstaller)
+build/
+dist/
+release/
+*.spec
+__pycache__/

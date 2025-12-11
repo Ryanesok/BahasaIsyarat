@@ -2,14 +2,20 @@ import os
 import sys
 
 # CRITICAL: Redirect stderr at file descriptor level BEFORE any imports
+# Handle both .py and .exe execution
 if sys.platform == 'win32':
-    # Redirect at OS level to catch C++ output
-    stderr_fd = sys.stderr.fileno()
-    devnull = os.open(os.devnull, os.O_WRONLY)
-    os.dup2(devnull, stderr_fd)
-    os.close(devnull)
-    # Also redirect Python-level stderr
-    sys.stderr = open(os.devnull, 'w')
+    try:
+        # Only redirect if stderr is available (not in .exe frozen mode)
+        if sys.stderr is not None and hasattr(sys.stderr, 'fileno'):
+            stderr_fd = sys.stderr.fileno()
+            devnull = os.open(os.devnull, os.O_WRONLY)
+            os.dup2(devnull, stderr_fd)
+            os.close(devnull)
+        # Also redirect Python-level stderr
+        sys.stderr = open(os.devnull, 'w')
+    except (AttributeError, OSError):
+        # If stderr redirection fails (e.g., in frozen .exe), just suppress at Python level
+        sys.stderr = open(os.devnull, 'w')
 
 # Suppress ALL warnings and TensorFlow logs
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
